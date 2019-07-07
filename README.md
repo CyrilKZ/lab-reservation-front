@@ -1,6 +1,6 @@
 # lab-reservation-front
 
-> the front-end for a lab reservation system
+> the front-end of a lab reservation system
 
 ## Build Setup
 
