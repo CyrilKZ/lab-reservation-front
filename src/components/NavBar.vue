@@ -7,7 +7,7 @@
     @select="handleSelect"
   >
     <el-menu-item class="navbar-item" index="./single_reserve"><div style="align-self: flex-end;">单人预约</div></el-menu-item>
-    <el-menu-item class="navbar-item" index="./multi_reserve">群体预约</el-menu-item>
+
     <el-menu-item class="navbar-item" index="./reservation_record">预约记录</el-menu-item>
   </el-menu>
 </template>

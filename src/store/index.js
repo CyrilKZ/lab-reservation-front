@@ -22,7 +22,14 @@ export default new Vuex.Store({
       state.userID = val.userID;
       state.token = val.token;
       console.log("stored");
-    },    
+    },
+    logout(state){
+      state.username = ''
+      state.routeList = []
+      state.userID = ''
+      state.userEmail = ''
+      state.token = ''
+    }    
   },
   plugins:[createPersistedState()]
 })

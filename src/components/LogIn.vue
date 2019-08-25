@@ -69,16 +69,6 @@ export default {
   },
   methods: {
     login() {
-      if (this.loginInfo.username === "admin") {
-        let resdata = {
-          username: this.loginInfo.username,
-          token: "",
-          userID: "",
-          userEmail: ""
-        };
-        console.log(resdata);
-        this.$store.commit("login", resdata);
-      }
       this.$refs["usernameLogin"].validate(valid => {
         if (valid) {
           this.loginErr = "";
@@ -87,24 +77,20 @@ export default {
           params.append("password", this.loginInfo.password);
           console.log(params);
           this.$axios
-            .post("/accounts/login/", params)
+            .post("/accounts/login", params)
             .then(response => {
-              if (response.data.result === 0) {
                 let resdata = {
                   username: this.loginInfo.username,
                   token: response.data.token,
                   userID: "",
                   userEmail: ""
-                };
+                }
                 this.$store.commit("login", resdata);
                 this.$router.push("/single_reserve")
                 console.log(resdata);
-              } else {
-                this.loginErrPswd = "密码错误";
-              }
             })
             .catch(err => {
-              this.$message.error("登陆失败，请检查网络");
+              this.$message.error("密码错误或账户不存在");
             });
         }
       });

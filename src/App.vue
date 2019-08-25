@@ -42,6 +42,14 @@ export default {
     handleCommand(command) {
       console.log("aaaa");
       console.log(this.$store.state);
+      let token = this.$store.state.token
+      console.log(token)     
+      this.$axios
+        .post("accounts/logout", null, {headers: {Authorization: 'JWT ' + token}})
+        .then(res=>{
+          this.$store.commit('logout')
+          this.$router.push('/')
+        })
     },
     changeColWidth(val) {
       this.colWidth = val;
@@ -57,8 +65,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  margin: auto;
   margin-top: 0px;
   min-width: 720px;
+  max-width: 1080px;
 }
 .topbar {
   border-bottom: solid 1px silver;

@@ -140,7 +140,7 @@ export default {
           params.append("password", this.registerInfo.password);
           params.append("email", this.registerInfo.email);
           this.$axios
-            .post("/accounts/register/", params)
+            .post("/accounts/register", params)
             .then(response => {
               console.log(response);
               if (response.data.result === 0) {
@@ -154,35 +154,35 @@ export default {
                     login.append("username", params.username);
                     login.append("password", params.password);
                     this.$axios
-                      .post("/accounts/login/", login)
+                      .post("/accounts/login", login)
                       .then(response => {
-                        if (response.data.result === 0) {
-                          let resdata = {
-                            username: this.loginInfo.username,
-                            token: response.data.token,
-                            userID: "",
-                            userEmail: params.email
-                          };
-                          this.$store.commit("login", resdata);
+                        let resdata = {
+                          username: this.loginInfo.username,
+                          token: response.data.token,
+                          userID: "",
+                          userEmail: params.email
                         }
+                        this.$store.commit("login", resdata)
                       })
                       .catch(err => {
-                        this.$message.error("登陆失败，请检查网络");
+                        this.$message.error("登陆失败，请重试");
                       });
                   })
                   .catch(() => {
                     this.$router.go(-1);
                   });
-              } else if (response.data.result === 1) {
-                console.log("reg fail1");
-                this.registerErrEml = "注册失败，请使用清华邮箱";
-              } else if (response.data.result === 2) {
-                console.log("reg fail2");
-                this.registerErrUsrnm = "注册失败，用户名已被占用";
               }
             })
             .catch(err => {
-              this.$message.error("注册失败，请检查网络");
+              this.$message.error("注册失败，请检查表单")
+              if (err.data.result === 1) {
+                console.log("reg fail1");
+                this.registerErrEml = "注册失败，请使用清华邮箱";
+              }
+              else if (err.data.result === 2) {
+                console.log("reg fail2");
+                this.registerErrUsrnm = "注册失败，用户名已被占用";
+              }
             });
         }
       });
