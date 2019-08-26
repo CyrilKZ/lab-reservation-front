@@ -7,6 +7,7 @@ import NavBar from '@/components/NavBar'
 import SingleReserve from '@/components/SingleReserve'
 import MultiReserve from '@/components/MultiReserve'
 import ReservationRecord from '@/components/ReservationRecord'
+import SingleReserveForm from '@/components/form'
 
 Vue.use(Router);
 
@@ -53,6 +54,15 @@ export default new Router({
       name: 'ReservationRecord',
       component: ReservationRecord,
       meta:{
+        hasNavbar: true,
+        hasInfo: true
+      }
+    },
+    {
+      path: '/single_reserve_form',
+      name: 'SingleReserveForm',
+      component: SingleReserveForm,
+      meta: {
         hasNavbar: true,
         hasInfo: true
       }
