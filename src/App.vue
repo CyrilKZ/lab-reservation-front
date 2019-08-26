@@ -5,8 +5,7 @@
         <div>3D打印预约系统</div>
       </el-col>
       <el-col :span="12" v-if="$route.meta.hasNavbar">
-        <NavBar>
-        </NavBar>
+        <navbar></navbar>
       </el-col>
       <el-col :span="2" v-if="$route.meta.hasInfo">
         <el-dropdown :hide-on-click="false" @command="handleCommand" v-model="username">
@@ -16,21 +15,33 @@
           </span>
           <el-dropdown-menu  slot="dropdown">
             <el-dropdown-item command="logout">退出</el-dropdown-item>
+            <el-dropdown-item command="changePassword">修改密码</el-dropdown-item>
+            <el-dropdown-item command="changeEmail">修改邮箱</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
     </el-row>
+    <el-row>
+      <el-col :span="24">
+        <breadcrumb></breadcrumb>
+      </el-col>
+    </el-row>
+    <pswdialog ></pswdialog>
     <router-view/>
   </div>
 </template>
 
 <script>
 import NavBar from './components/NavBar.vue'
+import PswDialog from './components/PswDialog.vue'
+import BreadCrumb from './components/BreadCrumb.vue'
 
 export default {
   name: 'App',
   components: {
-    'NavBar': NavBar
+    'navbar': NavBar,
+    'breadcrumb': BreadCrumb,
+    'pswdialog': PswDialog
   },
   data() {
     return {
@@ -41,7 +52,7 @@ export default {
   methods: {
     handleCommand(command) {
       console.log("aaaa");
-      console.log(this.$store.state);
+      console.log(this.$store.state)
       let token = this.$store.state.token
       console.log(token)     
       this.$axios

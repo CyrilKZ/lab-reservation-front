@@ -7,7 +7,7 @@ import NavBar from '@/components/NavBar'
 import SingleReserve from '@/components/SingleReserve'
 import MultiReserve from '@/components/MultiReserve'
 import ReservationRecord from '@/components/ReservationRecord'
-import SingleReserveForm from '@/components/form'
+import SingleReserveForm from '@/components/SingleReserveForm'
 
 Vue.use(Router);
 
@@ -19,7 +19,8 @@ export default new Router({
       component: LogIn,
       meta:{
         hasNavbar: false,
-        hasInfo: false
+        hasInfo: false,
+        title: '登录'
       }
     },
     {
@@ -28,7 +29,8 @@ export default new Router({
       component: Register,
       meta:{
         hasNavbar: false,
-        hasInfo: false
+        hasInfo: false,
+        title: '注册'
       }
     },
     {
@@ -37,7 +39,8 @@ export default new Router({
       component: SingleReserve,
       meta:{
         hasNavbar: true,
-        hasInfo: true
+        hasInfo: true,
+        title: '个人预约'
       }
     },
     {
@@ -46,7 +49,8 @@ export default new Router({
       component: MultiReserve,
       meta:{
         hasNavbar: true,
-        hasInfo: true
+        hasInfo: true,
+        title: ''
       }
     },
     {
@@ -55,7 +59,8 @@ export default new Router({
       component: ReservationRecord,
       meta:{
         hasNavbar: true,
-        hasInfo: true
+        hasInfo: true,
+        title: '预约记录'
       }
     },
     {
@@ -64,7 +69,8 @@ export default new Router({
       component: SingleReserveForm,
       meta: {
         hasNavbar: true,
-        hasInfo: true
+        hasInfo: true,
+        title: '填写预约表格'
       }
     }
   ]
