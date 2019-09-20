@@ -11,11 +11,11 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api':{
-        target: "http://www.lbjthu.tech:8080",
-        changeOrigin:true,
-        pathRewrite:{
-            '^/api':''
+      '/api': {
+        target: 'http://www.lbjthu.tech:8080',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
         }
       }
     },
@@ -28,7 +28,6 @@ module.exports = {
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
-    
     /**
      * Source Maps
      */

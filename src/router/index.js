@@ -9,7 +9,7 @@ import MultiReserve from '@/components/MultiReserve'
 import ReservationRecord from '@/components/ReservationRecord'
 import SingleReserveForm from '@/components/SingleReserveForm'
 
-Vue.use(Router);
+Vue.use(Router)
 
 export default new Router({
   routes: [
@@ -17,7 +17,7 @@ export default new Router({
       path: '/',
       name: 'LogIn',
       component: LogIn,
-      meta:{
+      meta: {
         hasNavbar: false,
         hasInfo: false,
         title: '登录'
@@ -27,7 +27,7 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register,
-      meta:{
+      meta: {
         hasNavbar: false,
         hasInfo: false,
         title: '注册'
@@ -37,7 +37,7 @@ export default new Router({
       path: '/single_reserve',
       name: 'SingleReserve',
       component: SingleReserve,
-      meta:{
+      meta: {
         hasNavbar: true,
         hasInfo: true,
         title: '个人预约'
@@ -47,7 +47,7 @@ export default new Router({
       path: '/multi_reserve',
       name: 'MultiReserve',
       component: MultiReserve,
-      meta:{
+      meta: {
         hasNavbar: true,
         hasInfo: true,
         title: ''
@@ -57,7 +57,7 @@ export default new Router({
       path: '/reservation_record',
       name: 'ReservationRecord',
       component: ReservationRecord,
-      meta:{
+      meta: {
         hasNavbar: true,
         hasInfo: true,
         title: '预约记录'

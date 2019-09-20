@@ -12,10 +12,24 @@ import store from './store'
 
 Vue.config.productionTip = false
 
-Vue.use(ElementUI);
-Vue.use(util);
-Vue.prototype.$axios = axios;
-axios.defaults.baseURL = '/api';
+Vue.use(ElementUI)
+Vue.use(util)
+Vue.prototype.$axios = axios
+axios.defaults.baseURL = '/api'
+
+axios.interceptors.response.use(
+  function(res){
+    return res
+  },
+  function(error){
+    if(error.status === 403){
+      ElementUI.Message.error('登陆失效，请重新登录')
+      router.replace('/')
+      store.commit('logout')
+    }
+    return Promise.reject(error)
+  }
+)
 
 /* eslint-disable no-new */
 new Vue({

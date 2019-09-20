@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: "SingleReserve",
+  name: 'SingleReserve',
   methods: {
     goSpecial(){
       console.log('goSpecial')

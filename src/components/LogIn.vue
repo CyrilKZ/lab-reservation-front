@@ -46,60 +46,57 @@
 
 <script>
 export default {
-  name: "LogIn",
+  name: 'LogIn',
   data() {
     return {
       loginInfo: {
-        username: "",
-        password: ""
+        username: '',
+        password: ''
       },
       rules: {
         username: [
-          { required: true, message: "请输入账号", trigger: "blur" },
-          { max: 30, message: "长度不超过30字符", trigger: "blur" }
+          { required: true, message: '请输入账号', trigger: 'blur' },
+          { max: 30, message: '长度不超过30字符', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { max: 50, message: "长度不超过50字符", trigger: "blur" }
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { max: 50, message: '长度不超过50字符', trigger: 'blur' }
         ]
       },
-      loginErrUsrnm: "",
-      loginErrPswd: ""
-    };
+      loginErrUsrnm: '',
+      loginErrPswd: ''
+    }
   },
   methods: {
     login() {
-      this.$refs["usernameLogin"].validate(valid => {
+      this.$refs['usernameLogin'].validate(valid => {
         if (valid) {
-          this.loginErr = "";
-          let params = new URLSearchParams();
-          params.append("username", this.loginInfo.username);
-          params.append("password", this.loginInfo.password);
-          console.log(params);
+          this.loginErr = ''
+          let params = new URLSearchParams()
+          params.append('username', this.loginInfo.username)
+          params.append('password', this.loginInfo.password)
+          console.log(params)
           this.$axios
-            .post("/accounts/login", params)
+            .post('/accounts/login', params)
             .then(response => {
-                let resdata = {
-                  username: this.loginInfo.username,
-                  token: response.data.token,
-                  userID: "",
-                  userEmail: ""
-                }
-                this.$store.commit("login", resdata);
-                this.$router.push("/single_reserve")
-                console.log(resdata);
+              let resdata = {
+                username: this.loginInfo.username,
+              }
+              this.$store.commit('login', resdata)
+              this.$router.push('/single_reserve')
+              console.log(resdata)
             })
             .catch(err => {
-              this.$message.error("密码错误或账户不存在");
-            });
+              this.$message.error('密码错误或账户不存在')
+            })
         }
-      });
+      })
     },
     goRegister() {
-      this.$router.push("/register");
+      this.$router.push('/register')
     }
   }
-};
+}
 </script>
 
 <style scoped>

@@ -26,7 +26,7 @@
         <breadcrumb></breadcrumb>
       </el-col>
     </el-row>
-    <pswdialog ></pswdialog>
+    <pswdialog :dialogFormVisible="showPwdDlg" @set-dialog-visibility="closePwdDlg"></pswdialog>
     <router-view/>
   </div>
 </template>
@@ -45,25 +45,31 @@ export default {
   },
   data() {
     return {
-      colWidth: 18,
-      username: ''
+      username: '',
+      showPwdDlg: false,
     }
   },
   methods: {
     handleCommand(command) {
-      console.log("aaaa");
+      console.log('aaaa')
       console.log(this.$store.state)
       let token = this.$store.state.token
-      console.log(token)     
-      this.$axios
-        .post("accounts/logout", null, {headers: {Authorization: 'JWT ' + token}})
-        .then(res=>{
-          this.$store.commit('logout')
-          this.$router.push('/')
-        })
+      console.log(token)
+      if(command === 'logout'){
+        this.$axios
+          .post('accounts/logout', null, {headers: {Authorization: 'JWT ' + token}})
+          .then(res=>{
+            this.$store.commit('logout')
+            this.$router.push('/')
+          })
+      }
+      else if (command === 'changePassword'){
+        this.showPwdDlg = true
+      }     
+      
     },
-    changeColWidth(val) {
-      this.colWidth = val;
+    closePwdDlg(val){
+      this.showPwdDlg = val
     }
   }
 }
@@ -87,8 +93,7 @@ export default {
   max-width: 1080px;
   margin: auto;
   align-items: flex-end;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   min-width: 720px;
 }
 .topbar-tittle {

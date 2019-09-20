@@ -66,132 +66,132 @@
 
 <script>
 export default {
-  name: "Register",
+  name: 'Register',
   data() {
     let pswd_validator = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("请输入密码"));
+        callback(new Error('请输入密码'))
       } else {
         if (value.length < 6) {
-          callback(new Error("密码长度不少于6字符"));
+          callback(new Error('密码长度不少于6字符'))
         }
-        callback();
+        callback()
       }
-    };
+    }
     let pswd2_validator = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("请确认密码"));
+        callback(new Error('请确认密码'))
       } else {
         if (value !== this.registerInfo.password) {
-          callback(new Error("密码不一致"));
+          callback(new Error('密码不一致'))
         }
-        callback();
+        callback()
       }
-    };
+    }
     let email_validator = (rule, value, callback) => {
       if (!value) {
-        callback(new Error("请输入邮箱"));
+        callback(new Error('请输入邮箱'))
       } else {
-        let expression = /^([a-zA-Z0-9]+[-_\.]?)+@([a-zA-Z0-9]+\.)+[a-z]+$/;
+        let expression = /^([a-zA-Z0-9]+[-_\.]?)+@([a-zA-Z0-9]+\.)+[a-z]+$/
         if (!expression.test(value)) {
-          callback(new Error("邮箱格式错误"));
+          callback(new Error('邮箱格式错误'))
         }
-        callback();
+        callback()
       }
-    };
+    }
     return {
       registerInfo: {
-        username: "",
-        password: "",
-        password2: "",
-        email: ""
+        username: '',
+        password: '',
+        password2: '',
+        email: ''
       },
-      registerErrUsrnm: "",
-      registerErrPswd: "",
-      registerErrPswd2: "",
-      registerErrEml: "",
+      registerErrUsrnm: '',
+      registerErrPswd: '',
+      registerErrPswd2: '',
+      registerErrEml: '',
       rules: {
         username: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
-          { max: 30, message: "用户名长度不超过30字符", trigger: "blur" }
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { max: 30, message: '用户名长度不超过30字符', trigger: 'blur' },
+          { min: 5, message: '用户名长度不能短于5字符', trigger: 'blur' }
         ],
         password: [
-          { validator: pswd_validator, trigger: "blur" },
-          { max: 50, message: "密码长度不超过50字符", trigger: "blur" }
+          { validator: pswd_validator, trigger: 'blur' },
+          { max: 50, message: '密码长度不超过50字符', trigger: 'blur' },
+          { min: 5, message: '密码长度不能短于5字符', trigger: 'blur' }
         ],
-        password2: [{ validator: pswd2_validator, trigger: "blur" }],
+        password2: [{ validator: pswd2_validator, trigger: 'blur' }],
         email: [
-          { validator: email_validator, trigger: "blur" },
-          { max: 50, message: "邮箱长度不超过50字符", trigger: "blur" }
+          { validator: email_validator, trigger: 'blur' },
+          { max: 50, message: '邮箱长度不超过50字符', trigger: 'blur' }
         ]
       }
-    };
+    }
   },
   methods: {
     register() {
-      this.$refs["usernameRegister"].validate(valid => {
+      this.$refs['usernameRegister'].validate(valid => {
         if (valid) {
-          this.registerErrEml = "";
-          this.registerErrUsrnm = "";
-          this.registerErrPswd = "";
-          this.registerErrPswd2 = "";
-          let params = new URLSearchParams();
-          params.append("username", this.registerInfo.username);
-          params.append("password", this.registerInfo.password);
-          params.append("email", this.registerInfo.email);
+          this.registerErrEml = ''
+          this.registerErrUsrnm = ''
+          this.registerErrPswd = ''
+          this.registerErrPswd2 = ''
+          let params = new URLSearchParams()
+          params.append('username', this.registerInfo.username)
+          params.append('password', this.registerInfo.password)
+          params.append('email', this.registerInfo.email)
           this.$axios
-            .post("/accounts/register", params)
+            .post('/accounts/register', params)
             .then(response => {
-              console.log(response);
-              if (response.data.result === 0) {
-                this.$confirm("注册成功，是否登录？", "提示", {
-                  confirmButtonText: "确定",
-                  cancelButtonText: "取消",
-                  type: "success"
+              console.log(response)               
+              this.$confirm('注册成功，是否登录？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'success'
+              })
+                .then(() => {
+                  let login = new URLSearchParams()
+                  login.append('username', this.registerInfo.username)
+                  login.append('password', this.registerInfo.password)
+                  console.log(login)
+                  this.$axios
+                    .post('/accounts/login', login)
+                    .then(response => {
+                      let resdata = {
+                        username: this.registerInfo.username,
+                      }
+                      this.$store.commit('login', resdata)
+                      this.$router.push('/single_reserve')
+                    })
+                    .catch(err => {
+                      console.log(err)
+                      this.$message.error('登陆失败，请重试')
+                    })
                 })
-                  .then(() => {
-                    let login = new URLSearchParams();
-                    login.append("username", params.username);
-                    login.append("password", params.password);
-                    this.$axios
-                      .post("/accounts/login", login)
-                      .then(response => {
-                        let resdata = {
-                          username: this.loginInfo.username,
-                          token: response.data.token,
-                          userID: "",
-                          userEmail: params.email
-                        }
-                        this.$store.commit("login", resdata)
-                      })
-                      .catch(err => {
-                        this.$message.error("登陆失败，请重试");
-                      });
-                  })
-                  .catch(() => {
-                    this.$router.go(-1);
-                  });
-              }
+                .catch(() => {
+                  this.$router.go(-1)
+                })              
             })
             .catch(err => {
-              this.$message.error("注册失败，请检查表单")
+              this.$message.error('注册失败，请检查表单')
               if (err.data.result === 1) {
-                console.log("reg fail1");
-                this.registerErrEml = "注册失败，请使用清华邮箱";
+                console.log('reg fail1')
+                this.registerErrEml = '注册失败，请使用清华邮箱'
               }
               else if (err.data.result === 2) {
-                console.log("reg fail2");
-                this.registerErrUsrnm = "注册失败，用户名已被占用";
+                console.log('reg fail2')
+                this.registerErrUsrnm = '注册失败，用户名已被占用'
               }
-            });
+            })
         }
-      });
+      })
     },
     goLogin(){
-      this.$router.go(-1);
+      this.$router.go(-1)
     }
   }
-};
+}
 </script>
 
 <style scoped>
