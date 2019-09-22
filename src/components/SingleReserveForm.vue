@@ -97,7 +97,7 @@ export default {
       }],
       leaderRules: {
         name: [{required: true, message:'请输入姓名', trigger: 'blur'}],
-        id: [{required: true, message:'请输入姓名', trigger: 'blur'}]
+        id: [{required: true, message:'请输入证件号', trigger: 'blur'}]
       },
       dateUnvalid: [],
       AMPMRadio: '',
