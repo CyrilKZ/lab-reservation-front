@@ -81,6 +81,7 @@ export default {
             .then(response => {
               let resdata = {
                 username: this.loginInfo.username,
+                isAdmin: response.data.admin
               }
               this.$store.commit('login', resdata)
               this.$router.push('/single_reserve')

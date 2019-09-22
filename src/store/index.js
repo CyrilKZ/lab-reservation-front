@@ -8,6 +8,8 @@ export default new Vuex.Store({
   state: {
     routeList: [],
     username: '',
+    isAdmin: false,
+    maxRsv: 0
   },
   mutations: {
     setRouteList (state, val) {
@@ -15,10 +17,14 @@ export default new Vuex.Store({
     },
     login (state, val) {
       state.username = val.username
+      state.isAdmin = val.isAdmin
+      state.maxRsv = val.maxRsv
     },
     logout (state) {
       state.username = ''
       state.routeList = []
+      state.isAdmin = false
+      state.maxRsv = 0
     }
   },
   plugins: [createPersistedState()]

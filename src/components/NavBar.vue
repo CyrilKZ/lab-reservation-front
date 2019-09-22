@@ -1,37 +1,18 @@
 <template>
   <el-menu
-    :default-active="activeIndex"
+    :default-active="$route.path"
     class="navbar"
     mode="horizontal"
-    router
-    @select="handleSelect"
+    :router="true"
   >
-    <el-menu-item class='navbar-item' index='./single_reserve'>单人预约</el-menu-item>
-    <el-menu-item class='navbar-item' index='./reservation_record'>预约记录</el-menu-item>
+    <el-menu-item class='navbar-item' index='/single_reserve'>单人预约</el-menu-item>
+    <el-menu-item class='navbar-item' index='/reservation_record'>预约记录</el-menu-item>
   </el-menu>
 </template>
 
 <script>
 export default {
   name: 'NavBar',
-  created() {
-    if(this.$route.path === '/single_reserve_form'){
-      this.activeIndex = './single_reserve'
-    }
-    else{
-      this.activeIndex = '.' + this.$route.path
-    }    
-  },
-  data() {
-    return {
-      activeIndex: '.' + this.$route.path,
-    }
-  },
-  methods: {
-    handleSelect(key, keyPath) {
-      this.activeIndex = key
-    }
-  }
 }
 </script>
 

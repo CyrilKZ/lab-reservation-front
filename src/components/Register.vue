@@ -10,48 +10,80 @@
         :rules="rules"
         label-suffix="left"
         label-width="0px"
-      >
-        <el-form-item prop="username" :error="registerErrUsrnm">
-          <div align="left" class="register-main">账号</div>
-          <el-input
-            type="text"
-            v-model="registerInfo.username"
-            placeholder="请输入账号"
-            auto-complete="off"
-            prefix-icon="el-icon-user-solid"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="password" :error="registerErrPswd">
-          <div align="left" class="register-main">密码</div>
-          <el-input
-            type="password"
-            v-model="registerInfo.password"
-            placeholder="请输入密码"
-            auto-complete="off"
-            prefix-icon="el-icon-lock"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="password2" :error="registerErrPswd2">
-          <div align="left" class="register-main">确认密码</div>
-          <el-input
-            type="password"
-            v-model="registerInfo.password2"
-            placeholder="请再次输入密码"
-            auto-complete="off"
-            prefix-icon="el-icon-lock"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="email" :error="registerErrEml">
-          <div align="left" class="register-main">邮箱</div>
-          <el-input
-            type="text"
-            v-model="registerInfo.email"
-            placeholder="请输入清华大学邮箱"
-            auto-complete="off"
-            prefix-icon="el-icon-message"
-          ></el-input>
-        </el-form-item>
+      >  
+        <el-row>
+          <el-col :span="5">
+            <div align="right" class="register-title">用户名：</div>
+          </el-col>
+          <el-col :span="19">
+            <el-form-item prop="username" :error="registerErrUsrnm">
+              <el-input
+                type="text"
+                v-model="registerInfo.username"
+                placeholder="请输入账号"
+                auto-complete="off"
+                prefix-icon="el-icon-user-solid"
+              ></el-input>
+              <div align="left" class="register-tip">5到30个字符，不能包括特殊字符</div>
+            </el-form-item>
+          </el-col>
+        </el-row>          
+               
+        <el-row>
+          <el-col :span="5">
+            <div align="right" class="register-title">密码：</div>
+          </el-col>
+          <el-col :span="19">
+            <el-form-item prop="password" :error="registerErrPswd">
+              <el-input
+                type="password"
+                v-model="registerInfo.password"
+                placeholder="请输入密码"
+                auto-complete="off"
+                prefix-icon="el-icon-lock"
+              ></el-input>
+              <div align="left" class="register-tip">6到50个字符，不能包括特殊字符</div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+                   
+        <el-row>
+          <el-col :span="5">
+            <div align="right" class="register-title">确认密码：</div>
+          </el-col>
+          <el-col :span="19">
+            <el-form-item prop="password2" :error="registerErrPswd2">
+            <el-input
+              type="password"
+              v-model="registerInfo.password2"
+              placeholder="请再次输入密码"
+              auto-complete="off"
+              prefix-icon="el-icon-lock"
+            ></el-input>
+            <div align="left" class="register-tip">再次输入在之前输入的密码</div>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      
+        <el-row>
+          <el-col :span="5">
+            <div align="right" class="register-title">邮箱：</div>
+          </el-col>
+          <el-col :span="19">
+            <el-form-item prop="email" :error="registerErrEml">
+              <el-input
+                type="text"
+                v-model="registerInfo.email"
+                placeholder="请输入清华大学邮箱"
+                auto-complete="off"
+                prefix-icon="el-icon-message"
+              ></el-input>
+              <div align="left" class="register-tip">请输入本人的清华大学邮箱</div>
+            </el-form-item>
+          </el-col>
+        </el-row>      
       </el-form>
+
       <el-row>
         <el-col :span="12">
           <el-button type="primary" @click="register" style="width: 60%">注册账号</el-button>
@@ -72,9 +104,6 @@ export default {
       if (!value) {
         callback(new Error('请输入密码'))
       } else {
-        if (value.length < 6) {
-          callback(new Error('密码长度不少于6字符'))
-        }
         callback()
       }
     }
@@ -119,7 +148,7 @@ export default {
         password: [
           { validator: pswd_validator, trigger: 'blur' },
           { max: 50, message: '密码长度不超过50字符', trigger: 'blur' },
-          { min: 5, message: '密码长度不能短于5字符', trigger: 'blur' }
+          { min: 6, message: '密码长度不能短于6字符', trigger: 'blur' }
         ],
         password2: [{ validator: pswd2_validator, trigger: 'blur' }],
         email: [
@@ -160,6 +189,7 @@ export default {
                     .then(response => {
                       let resdata = {
                         username: this.registerInfo.username,
+                        isAdmin: response.data.admin
                       }
                       this.$store.commit('login', resdata)
                       this.$router.push('/single_reserve')
@@ -200,7 +230,7 @@ export default {
   background-clip: padding-box;
   margin: 100px auto;
   padding: 20px;
-  width: 400px;
+  width: 550px;
   border: 1px solid silver;
   font-weight: 600;
   font-size: 25px;
@@ -216,5 +246,19 @@ export default {
 .register-main {
   font-weight: 400;
   font-size: 18px;
+}
+.register-title {
+  font-weight: 400;
+  font-size: 18px;
+  vertical-align: middle;
+  line-height: 40px;
+}
+.register-tip {
+  font-weight: 400;
+  font-size: 16px;
+  color: silver;
+  margin-bottom: 0;
+  padding: 0;
+  line-height: 22px;
 }
 </style>

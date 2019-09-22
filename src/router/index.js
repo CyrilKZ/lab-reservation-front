@@ -20,7 +20,8 @@ export default new Router({
       meta: {
         hasNavbar: false,
         hasInfo: false,
-        title: '登录'
+        title: '登录',
+        authType: 'all'
       }
     },
     {
@@ -30,7 +31,8 @@ export default new Router({
       meta: {
         hasNavbar: false,
         hasInfo: false,
-        title: '注册'
+        title: '注册',
+        authType: 'all'
       }
     },
     {
@@ -40,7 +42,8 @@ export default new Router({
       meta: {
         hasNavbar: true,
         hasInfo: true,
-        title: '个人预约'
+        title: '个人预约',
+        authType: 'user'
       }
     },
     {
@@ -50,7 +53,8 @@ export default new Router({
       meta: {
         hasNavbar: true,
         hasInfo: true,
-        title: ''
+        title: '',
+        authType: 'admin'
       }
     },
     {
@@ -60,7 +64,8 @@ export default new Router({
       meta: {
         hasNavbar: true,
         hasInfo: true,
-        title: '预约记录'
+        title: '预约记录',
+        authType: 'user'
       }
     },
     {
@@ -70,7 +75,8 @@ export default new Router({
       meta: {
         hasNavbar: true,
         hasInfo: true,
-        title: '填写预约表格'
+        title: '填写预约表格',
+        authType: 'user'
       }
     }
   ]

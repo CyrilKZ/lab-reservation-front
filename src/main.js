@@ -22,7 +22,10 @@ axios.interceptors.response.use(
     return res
   },
   function(error){
-    if(error.status === 403){
+    console.log(error)
+    console.log(error.response)
+    if(error.response.status === 403){
+      console.log('login err')
       ElementUI.Message.error('登陆失效，请重新登录')
       router.replace('/')
       store.commit('logout')
@@ -30,6 +33,69 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+router.beforeEach((to, from, next) => {
+  if(from.name){
+    if(to.name === 'SingleReserveForm' && from.name !== 'SingleReserve'){
+      next('/single_reserve')
+      let routeList = []
+      routeList.push({
+        path: '/single_reserve',
+        query: '',
+        title: '个人预约'
+      })
+      store.commit('setRouteList', routeList)
+      return
+    }
+  }
+  if(from.name === 'SingleReserveForm' && to.name!=='LogIn'){
+    ElementUI.MessageBox.confirm('这样会删除所有的表单数据','确定离开界面?',{
+      type: 'warning'
+    }).then(()=>{
+      next()
+    }).catch(()=>{
+      return
+    })
+    return
+  }  
+  if(to.meta.authType === 'all'){
+    next()
+  }
+  else if(to.meta.authType === 'user'){
+    if(store.state.isAdmin){
+      ElementUI.Message.error('权限错误，请重新登录')
+      store.commit('logout')
+      next('/')
+    }
+    else if(store.state.username === ''){
+      console.log(store.state)
+      ElementUI.Message.error('登录失效，请重新登录')
+      store.commit('logout')
+      next('/')
+    }
+    else{
+      next()
+    }
+  }
+  else if(to.meta.authType === 'admin'){
+    if(!store.state.isAdmin){
+      ElementUI.Message.error('权限错误，请重新登录')
+      store.commit('logout')
+      next('/')
+    }
+    else if(store.state.username === ''){
+      ElementUI.Message.error('登录失效，请重新登录')
+      store.commit('logout')
+      next('/')
+    }
+    else{
+      next()
+    }
+  }
+  else{
+    next()
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({

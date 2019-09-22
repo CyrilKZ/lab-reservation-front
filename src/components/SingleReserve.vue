@@ -30,6 +30,7 @@ export default {
     },
     goForm(){
       console.log('goForm')
+      console.log(this.$router)
       this.$router.push('/single_reserve_form')
     }
   }

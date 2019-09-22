@@ -2,10 +2,14 @@
   <div id="app">
     <el-row class = "topbar" type="flex" justify="space-between">
       <el-col :span="10" class="topbar-tittle">
-        <div>3D打印预约系统</div>
+        <div align='left'>3D打印预约系统</div>
       </el-col>
-      <el-col :span="12" v-if="$route.meta.hasNavbar">
-        <navbar></navbar>
+      <el-col :span="6" v-if="$route.meta.hasNavbar" align='left'>
+        <div style="display: inline; color:gray">|</div>
+        <el-button type="text" class="navbar-item" @click="goSingleReserve">个人预约</el-button>
+        <div style="display: inline; color:gray">|</div>
+        <el-button type="text" class="navbar-item" @click="goReserveRecord">预约记录</el-button>
+        <div style="display: inline; color:gray">|</div>
       </el-col>
       <el-col :span="2" v-if="$route.meta.hasInfo">
         <el-dropdown :hide-on-click="false" @command="handleCommand" v-model="username">
@@ -32,14 +36,12 @@
 </template>
 
 <script>
-import NavBar from './components/NavBar.vue'
 import PswDialog from './components/PswDialog.vue'
 import BreadCrumb from './components/BreadCrumb.vue'
 
 export default {
   name: 'App',
   components: {
-    'navbar': NavBar,
     'breadcrumb': BreadCrumb,
     'pswdialog': PswDialog
   },
@@ -49,6 +51,14 @@ export default {
       showPwdDlg: false,
     }
   },
+  created() {
+    if(this.$route.path === '/' || this.$route.path === 'register'){
+      this.$store.commit('logout')
+    }
+  },
+  destroyed() {
+    this.$store.commit('logout')
+  },
   methods: {
     handleCommand(command) {
       console.log('aaaa')
@@ -57,7 +67,7 @@ export default {
       console.log(token)
       if(command === 'logout'){
         this.$axios
-          .post('accounts/logout', null, {headers: {Authorization: 'JWT ' + token}})
+          .post('accounts/logout')
           .then(res=>{
             this.$store.commit('logout')
             this.$router.push('/')
@@ -67,6 +77,12 @@ export default {
         this.showPwdDlg = true
       }     
       
+    },
+    goSingleReserve(){
+      this.$router.push('/single_reserve')
+    },
+    goReserveRecord(){
+      this.$router.push('/reservation_record')
     },
     closePwdDlg(val){
       this.showPwdDlg = val
@@ -88,8 +104,7 @@ export default {
   max-width: 1080px;
 }
 .topbar {
-  border-bottom: solid 1px silver;
-  width: 100%;
+  border-bottom: 1px solid silver;
   max-width: 1080px;
   margin: auto;
   align-items: flex-end;
@@ -101,5 +116,10 @@ export default {
   font-size: 30px;
   text-align: left;
   margin-left: 20px;
+}
+.navbar-item {
+  font-size: 18px;
+  color: grey;
+  height: 30px;
 }
 </style>

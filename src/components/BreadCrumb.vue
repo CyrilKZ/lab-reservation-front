@@ -20,7 +20,8 @@ export default {
   watch: {
     $route(to, from){
       let routeList = []
-      if(to.name === 'LogIn' || to.name === 'Register' || to.name === 'KickedOut'){
+      console.log(to.name)
+      if(to.name === 'LogIn' || to.name === 'Register'){
         //do nothing
       }
       else if(to.name === 'SingleReserve' || to.name === 'ReservationRecord'){
