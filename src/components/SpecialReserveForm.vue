@@ -70,6 +70,7 @@
             resize="none"
             :autosize="{minRows: 1}"
           ></el-input>
+          <div align="left" class="form-tip" style="color: purple">重要: 请认真填写预约该时段的特殊原因!</div>
         </el-form-item>
       </el-form>
       <div class="sel-sub-title" align="left" style="margin-top: 20px">选择时间</div>
@@ -79,47 +80,37 @@
         ref="dateTimeForm"
         :rules="dateTimeRules"
         label-position="right"
-        label-width="80px"
+        label-width="100px"
       >
         <el-row>
-          <el-col :span="24">
-            <el-form-item label="预约日期" prop="date">
-              <el-col :span="12">
-                <el-date-picker
-                  v-model="dateTime.date"
-                  placeholder="选择预约日期"
-                  :picker-options="dateOptions"
-                  @change="dateChanged"
-                  :clearable="false"
-                  class="long-picker"
-                  size="small"
-                  align="left"
-                  value-format="yyyy-MM-dd"
-                ></el-date-picker>
-                <div align="left" class="form-tip">注意：只开放90天内的预约</div>
-              </el-col>
-              <el-col :span="4">
-                <el-button
-                  type="primary"
-                  @click="updateDateInfo"
-                  class="long-picker"
-                  size="small"
-                  :plain="true"
-                >刷新可选日期</el-button>
-              </el-col>
+          <el-col :span="13">
+            <el-form-item label="预约日期" prop="time">
+              <el-date-picker
+                type="datetime"
+                v-model="dateTime.time"
+                placeholder="选择预约日期"
+                :picker-options="dateOptions"
+                @change="dateChanged"
+                :clearable="false"
+                class="long-picker"
+                size="small"
+                align="left"
+              ></el-date-picker>
+              <div align="left" class="form-tip">注意：只开放90天内的预约</div>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="18">
-            <el-form-item label="预约时段" prop="AMPM">
-              <div align="left">
-                <el-radio-group v-model="dateTime.AMPM" size="small" align="left">
-                  <el-radio-button label="上午" :disabled="AMDisabled"></el-radio-button>
-                  <el-radio-button label="下午" :disabled="PMDisabled"></el-radio-button>
-                </el-radio-group>
-              </div>
-              <div align="left" class="form-tip-large">选择上午(08:00-12:00)或下午(13:00-17:00)</div>
+          <el-col :span="9">
+            <el-form-item label="使用时长" prop="duration">
+              <el-input 
+                type="number"
+                v-model="dateTime.duration" 
+                placeholder="请选择预计使用时长"
+                size="small"
+                :min="0"
+                :max="6"
+              >
+              </el-input>  
+              <div align="left" class="form-tip">需要使用多少小时</div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -138,7 +129,7 @@
 
 <script>
 export default {
-  name: 'ReserveForm',
+  name: 'SpecialReserveForm',
   data() {
     let ID_validator = (rule, value, callback) => {
       if (!value) {
@@ -147,6 +138,16 @@ export default {
         let expression = /^20[0-9]{8}$/
         if (!expression.test(value)) {
           callback(new Error('证件号格式错误'))
+        }
+        callback()
+      }
+    }
+    let duration_validator = (rule, value, callback) => {
+      if(!value) {
+        callback(new Error('请选择时长'))
+      } else {
+        if(value <= 0 || value > 6){
+          callback(new Error('时长应在0-6小时内'))
         }
         callback()
       }
@@ -172,20 +173,22 @@ export default {
         ]
       },
       dateTimeRules: {
-        date: [{ required: true, message: '请选择日期', trigger: 'blur' }],
-        AMPM: [{ required: true, message: '请选择时段', trigger: 'blur' }]
+        time: [{ required: true, message: '请选择日期', trigger: 'blur' }],
+        duration: [
+          { required:true, message: '请选择时长', trigger:'blur'},
+          { validator: duration_validator, trigger: 'blur'}
+        ]
       },
       dateTime: {
-        date: '',
-        AMPM: ''
+        time:'',
+        duration:''
       },
       dateUnvalid: [],
       AMDisabled: false,
       PMDisabled: false,
       dateOptions: {
         disabledDate(time) {
-          let day = time.getDay()
-          return time.getTime() <= Date.now() || day === 6 || day === 0
+          return time.getTime() <= Date.now()
         }
       },
       dateErr: '',
@@ -205,8 +208,8 @@ export default {
         text: ''
       }
       this.dateTime = {
-        date: '',
-        AMPM: ''
+        time: '',
+        duration:''
       }
       this.AMDisabled = false
       this.PMDisabled = false
@@ -233,47 +236,13 @@ export default {
       this.$refs['dateTimeForm'].validate(valid => {
         allValid = allValid && valid
       })
-      if(!allValid){
-        return
-      }
-      let AMPM = ''
-      if(this.dateTime.AMPM === '上午'){
-        AMPM = 'AM'
-      }
-      else if(this.dateTime.AMPM === '下午'){
-        AMPM = 'PM'
-      }
-      console.log(this.dateTime.date)
-      let params = {
-        operators: this.leaderInfo,
-        date: this.dateTime.date,
-        time: AMPM,
-        note: this.reason.text
-      }
-      this.$axios.post('/reserve/submit', params)
-        .then(res=>{
-          this.$router.push('/success')
-        })
-        .catch(err=>{
-          if(err.response.data === 'Beyond max reserve limit'){
-            this.$confirm('您的可用预约数不足，请减少表单中的预约人数或退出','预约失败',{
-              confirmButtonText: '修改表单',
-              cancelButtonText: '退出预约',
-              type: 'error'
-            }).then(()=>{
-
-            }).catch(()=>{
-              this.$router.push({path:'/single_reserve',query:{no_warning: true}})
-            })
-          }
-          else{
-            this.$message.error('预约失败，请检查表单后重试')
-          }         
-        })
+      console.log(allValid)
+      console.log(this.dateTime.duration)
     },
     determineDateValid(time) {
       for (let i = 0; i < this.dateUnvalid.length; ++i) {
         if (this.dateUnvalid[i].getTime() === time.getTime()) {
+          console.log(true)
           return true
         }
       }
@@ -282,14 +251,22 @@ export default {
     updateDateInfo() {
       this.dateUnvalid = []
       this.dateTime.date = ''
+      //post here
+      let date = new Date()
+      date.setFullYear(2019)
+      date.setMonth(9)
+      date.setDate(30)
+      date.setHours(0)
+      date.setMinutes(0)
+      date.setSeconds(0)
+      date.setMilliseconds(0)
+      console.log(date)
+      this.dateUnvalid.push(date)
       const self = this
       this.dateOptions = Object.assign({}, this.dateOptions, {
         disabledDate: time => {
-          let day = time.getDay()
-          let stamp =  time.getTime()
+          let stamp = time.getTime()
           return (
-            day === 0 ||
-            day === 6 ||
             self.determineDateValid(time) ||
             stamp <= Date.now() ||
             stamp >= Date.now() + 90 * 24 * 3600 * 1000
@@ -306,11 +283,8 @@ export default {
       const self = this
       this.dateOptions = Object.assign({}, this.dateOptions, {
         disabledDate: time => {
-          let day = time.getDay()
-          let stamp =  time.getTime()
+          let stamp = time.getTime()
           return (
-            day === 0 ||
-            day === 6 ||
             self.determineDateValid(time) ||
             stamp <= Date.now() ||
             stamp >= Date.now() + 90 * 24 * 3600 * 1000

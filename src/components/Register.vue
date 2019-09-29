@@ -81,6 +81,24 @@
               <div align="left" class="register-tip">请输入本人的清华大学邮箱</div>
             </el-form-item>
           </el-col>
+        </el-row> 
+
+        <el-row>
+          <el-col :span="5">
+            <div align="right" class="register-title">联系电话：</div>
+          </el-col>
+          <el-col :span="19">
+            <el-form-item prop="phone" :error="registerErrPhn">
+              <el-input
+                type="text"
+                v-model="registerInfo.phone"
+                placeholder="请输入可以用于通知预约变更的联系电话"
+                auto-complete="off"
+                prefix-icon="el-icon-phone-outline"
+              ></el-input>
+              <div align="left" class="register-tip">请输入本人的联系电话</div>
+            </el-form-item>
+          </el-col>
         </el-row>      
       </el-form>
 
@@ -128,17 +146,30 @@ export default {
         callback()
       }
     }
+    let phone_validator = (rule, value, callback) => {
+      if(!value) {
+        callback(new Error('请输入你的联系电话'))
+      } else {
+        let expression = /^[0-9]{11}$/
+        if(!expression.test(value)) {
+          callback(new Error('请输入格式正确的联系电话'))
+        }
+        callback()
+      }
+    }
     return {
       registerInfo: {
         username: '',
         password: '',
         password2: '',
-        email: ''
+        email: '',
+        phone: ''
       },
       registerErrUsrnm: '',
       registerErrPswd: '',
       registerErrPswd2: '',
       registerErrEml: '',
+      registerErrPhn: '',
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -154,6 +185,9 @@ export default {
         email: [
           { validator: email_validator, trigger: 'blur' },
           { max: 50, message: '邮箱长度不超过50字符', trigger: 'blur' }
+        ],
+        phone :[
+          { validator: phone_validator, trigger: 'blur'},
         ]
       }
     }
@@ -166,42 +200,21 @@ export default {
           this.registerErrUsrnm = ''
           this.registerErrPswd = ''
           this.registerErrPswd2 = ''
+          this.registerErrPhn = ''
           let params = new URLSearchParams()
           params.append('username', this.registerInfo.username)
           params.append('password', this.registerInfo.password)
           params.append('email', this.registerInfo.email)
+          params.append('phone', this.registerInfo.phone)
           this.$axios
             .post('/accounts/register', params)
             .then(response => {
-              console.log(response)               
-              this.$confirm('注册成功，是否登录？', '提示', {
+              this.$alert('注册成功，请验证邮箱后登录','成功',{
                 confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'success'
-              })
-                .then(() => {
-                  let login = new URLSearchParams()
-                  login.append('username', this.registerInfo.username)
-                  login.append('password', this.registerInfo.password)
-                  console.log(login)
-                  this.$axios
-                    .post('/accounts/login', login)
-                    .then(response => {
-                      let resdata = {
-                        username: this.registerInfo.username,
-                        isAdmin: response.data.admin
-                      }
-                      this.$store.commit('login', resdata)
-                      this.$router.push('/single_reserve')
-                    })
-                    .catch(err => {
-                      console.log(err)
-                      this.$message.error('登陆失败，请重试')
-                    })
-                })
-                .catch(() => {
-                  this.$router.go(-1)
-                })              
+                callback: action=>{
+                  this.$router.push('/')
+                }
+              })            
             })
             .catch(err => {
               this.$message.error('注册失败，请检查表单')

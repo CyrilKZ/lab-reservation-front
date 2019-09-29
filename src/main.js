@@ -47,8 +47,22 @@ router.beforeEach((to, from, next) => {
       store.commit('setRouteList', routeList)
       return
     }
+    if(to.name === 'SpecialReserveForm' && from.name !== 'SingleReserve'){
+      next('/single_reserve')
+      let routeList = []
+      routeList.push({
+        path: '/single_reserve',
+        query: '',
+        title: '个人预约'
+      })
+      store.commit('setRouteList', routeList)
+      return
+    }
   }
-  if(from.name === 'SingleReserveForm' && to.name!=='LogIn'){
+  console.log(to.query)
+  if((from.name === 'SingleReserveForm' || from.name === 'SpecialReserveForm') && 
+    !(to.name==='LogIn' || to.name==='ReserveSuccess' || to.name==='ReservePending') &&
+    ('no_waning' in to.query && !to.query.no_warning)){
     ElementUI.MessageBox.confirm('这样会删除所有的表单数据','确定离开界面?',{
       type: 'warning'
     }).then(()=>{

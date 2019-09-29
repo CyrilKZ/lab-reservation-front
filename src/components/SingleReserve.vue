@@ -27,6 +27,7 @@ export default {
   methods: {
     goSpecial(){
       console.log('goSpecial')
+      this.$router.push('/special_reserve_form')
     },
     goForm(){
       console.log('goForm')

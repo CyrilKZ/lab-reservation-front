@@ -78,6 +78,7 @@ export default {
     confirmChange() {
       this.$refs['account'].validate(valid => {
         if (valid) {
+          this.errorMsg = ''
           let params = new URLSearchParams()
           params.append('oldpwd', this.account.old_password)
           params.append('newpwd', this.account.new_password)
@@ -87,6 +88,11 @@ export default {
               this.getVisibility = false
               this.$store.commit('logout')
               this.$router.push('/')
+            })
+            .catch(err=>{
+              this.$message.error('密码错误，请重试')
+              this.errorMsg = '请重新输入密码'
+              this.account.old_password = ''
             })
         }
       })

@@ -19,8 +19,8 @@
           </span>
           <el-dropdown-menu  slot="dropdown">
             <el-dropdown-item command="logout">退出</el-dropdown-item>
-            <el-dropdown-item command="changePassword">修改密码</el-dropdown-item>
-            <el-dropdown-item command="changeEmail">修改邮箱</el-dropdown-item>
+            <el-dropdown-item command="changePassword">修改账号密码</el-dropdown-item>
+            <el-dropdown-item command="changePhone">修改联系电话</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
@@ -31,24 +31,28 @@
       </el-col>
     </el-row>
     <pswdialog :dialogFormVisible="showPwdDlg" @set-dialog-visibility="closePwdDlg"></pswdialog>
+    <phndialog :dialogFormVisible="showPhnDlg" @set-dialog-visibility="closePhnDlg"></phndialog>
     <router-view/>
   </div>
 </template>
 
 <script>
 import PswDialog from './components/PswDialog.vue'
+import PhnDialog from './components/PhnDialog.vue'
 import BreadCrumb from './components/BreadCrumb.vue'
 
 export default {
   name: 'App',
   components: {
     'breadcrumb': BreadCrumb,
-    'pswdialog': PswDialog
+    'pswdialog': PswDialog,
+    'phndialog': PhnDialog
   },
   data() {
     return {
       username: '',
       showPwdDlg: false,
+      showPhnDlg: false
     }
   },
   created() {
@@ -61,10 +65,6 @@ export default {
   },
   methods: {
     handleCommand(command) {
-      console.log('aaaa')
-      console.log(this.$store.state)
-      let token = this.$store.state.token
-      console.log(token)
       if(command === 'logout'){
         this.$axios
           .post('accounts/logout')
@@ -76,7 +76,9 @@ export default {
       else if (command === 'changePassword'){
         this.showPwdDlg = true
       }     
-      
+      else if (command === 'changePhone'){
+        this.showPhnDlg = true
+      }
     },
     goSingleReserve(){
       this.$router.push('/single_reserve')
@@ -86,6 +88,9 @@ export default {
     },
     closePwdDlg(val){
       this.showPwdDlg = val
+    },
+    closePhnDlg(val){
+      this.showPhnDlg = val
     }
   }
 }

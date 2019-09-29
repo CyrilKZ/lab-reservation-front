@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+//import HelloWorld from '@/components/HelloWorld'
 import LogIn from '@/components/LogIn'
 import Register from '@/components/Register'
-import NavBar from '@/components/NavBar'
+//import NavBar from '@/components/NavBar'
 import SingleReserve from '@/components/SingleReserve'
 import MultiReserve from '@/components/MultiReserve'
 import ReservationRecord from '@/components/ReservationRecord'
 import SingleReserveForm from '@/components/SingleReserveForm'
+import ReserveSuccess from '@/components/ReserveSuccess'
+import SpecialReserveForm from '@/components/SpecialReserveForm'
 
 Vue.use(Router)
 
@@ -75,7 +77,27 @@ export default new Router({
       meta: {
         hasNavbar: true,
         hasInfo: true,
-        title: '填写预约表格',
+        title: '填写普通预约表格',
+        authType: 'user'
+      }
+    },{
+      path: '/special_reserve_form',
+      name: 'SpecialReserveForm',
+      component: SpecialReserveForm,
+      meta: {
+        hasNavbar: true,
+        hasInfo: true,
+        title: '特殊时段预约申请',
+        authType: 'user'
+      }
+    },{
+      path: '/success',
+      name: 'ReserveSuccess',
+      component: ReserveSuccess,
+      meta: {
+        hasInfo: true,
+        hasNavbar: true,
+        title: '提示',
         authType: 'user'
       }
     }
