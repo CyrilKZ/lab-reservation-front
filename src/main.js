@@ -6,14 +6,12 @@ import router from './router'
 import ElementUI from 'element-ui'
 import './theme/index.css'
 
-import util from './utils/util'
 import axios from 'axios'
 import store from './store'
 
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
-Vue.use(util)
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = '/api'
 
