@@ -115,8 +115,8 @@
             <el-form-item label="预约时段" prop="AMPM">
               <div align="left">
                 <el-radio-group v-model="dateTime.AMPM" size="small" align="left">
-                  <el-radio-button label="上午" :disabled="AMDisabled"></el-radio-button>
-                  <el-radio-button label="下午" :disabled="PMDisabled"></el-radio-button>
+                  <el-radio-button label="上午" :disabled="leaderInfo.length > AMRemain"></el-radio-button>
+                  <el-radio-button label="下午" :disabled="leaderInfo.length > PMRemain"></el-radio-button>
                 </el-radio-group>
               </div>
               <div align="left" class="form-tip-large">选择上午(08:00-12:00)或下午(13:00-17:00)</div>
@@ -139,6 +139,9 @@
 <script>
 export default {
   name: 'ReserveForm',
+  created() {
+    this.updateDateInfo()
+  },
   data() {
     let ID_validator = (rule, value, callback) => {
       if (!value) {
@@ -147,6 +150,24 @@ export default {
         let expression = /^20[0-9]{8}$/
         if (!expression.test(value)) {
           callback(new Error('证件号格式错误'))
+        }
+        callback()
+      }
+    }
+    let AMPM_validator = (rule, value, callback)=>{
+      if(!value){
+        callback(new Error('请选择时段'))
+      } else {
+        let AMPM = ''
+        if(value === '上午'){
+          if(this.AMRemain < this.leaderInfo.length){
+            callback(new Error('该时段无法预约'+this.leaderInfo.length+'台机器, 请减少数量或重新选择时段'))
+          }
+        }
+        if(value === '下午'){
+          if(this.PMRemain < this.leaderInfo.length){
+            callback(new Error('该时段无法预约'+this.leaderInfo.length+'台机器, 请减少数量或重新选择时段'))
+          }
         }
         callback()
       }
@@ -173,28 +194,29 @@ export default {
       },
       dateTimeRules: {
         date: [{ required: true, message: '请选择日期', trigger: 'blur' }],
-        AMPM: [{ required: true, message: '请选择时段', trigger: 'blur' }]
+        AMPM: [
+          { required: true, message: '请选择时段', trigger: 'blur' },
+          { validator: AMPM_validator, trigger:'blur'}
+        ]
       },
       dateTime: {
         date: '',
         AMPM: ''
       },
       dateUnvalid: [],
-      AMDisabled: false,
-      PMDisabled: false,
+      dateInfo: [],
+      AMRemain: 8,
+      PMRemain: 8,
       dateOptions: {
         disabledDate(time) {
           let day = time.getDay()
           return time.getTime() <= Date.now() || day === 6 || day === 0
         }
       },
-      dateErr: '',
-      AMPMErr: ''
     }
   },
   methods: {
     clearAll() {
-      this.dateSelected = ''
       this.leaderInfo = [
         {
           name: '',
@@ -208,17 +230,28 @@ export default {
         date: '',
         AMPM: ''
       }
-      this.AMDisabled = false
-      this.PMDisabled = false
+      this.AMRemain = 8
+      this.PMRemain = 8
+      this.localUpdateDateInfo()
     },
     addLeader() {
       this.leaderInfo.push({
         name: '',
         id: ''
       })
+      this.localUpdateDateInfo()
+      if(this.dateTime.AMPM === '上午' && this.AMRemain < this.leaderInfo.length){
+        this.$message.error('该时段无法预约'+this.leaderInfo.length+'台机器, 请减少数量或重新选择时段')
+        this.dateTime.AMPM === ''
+      }
+      if(this.dateTime.AMPM === '下午' && this.PMRemain < this.leaderInfo.length){
+        this.$message.error('该时段无法预约'+this.leaderInfo.length+'台机器, 请减少数量或重新选择时段')
+        this.dateTime.AMPM === ''
+      }
     },
     removeLeader(index) {
       this.leaderInfo.splice(index, 1)
+      this.localUpdateDateInfo()
     },
     submit() {
       let allValid = true
@@ -273,7 +306,8 @@ export default {
     },
     determineDateValid(time) {
       for (let i = 0; i < this.dateUnvalid.length; ++i) {
-        if (this.dateUnvalid[i].getTime() === time.getTime()) {
+        let w = this.dateTranslate(new Date(time))
+        if (this.dateUnvalid[i] === w) {  
           return true
         }
       }
@@ -281,8 +315,34 @@ export default {
     },
     updateDateInfo() {
       this.dateUnvalid = []
+      this.dateInfo = []
       this.dateTime.date = ''
+      let today = this.dateTranslate(new Date())
       const self = this
+      let params = new URLSearchParams()
+      params.append('start', today)
+      params.append('length', 90)
+      this.$axios.post(
+        '/reserve/queryused', 
+        params
+      ).then(res=>{
+        res.data.forEach(item => {
+          let itemInfo = {
+            date: item['date'],
+            AM: parseInt(item['AM']),
+            PM: parseInt(item['PM'])
+          }
+          self.dateInfo.push(itemInfo)
+          if(itemInfo.AM + itemInfo.PM === 0 || 
+              (itemInfo.AM < self.leaderInfo.length && itemInfo.PM < self.leaderInfo.length)){
+            self.dateUnvalid.push(itemInfo.date)
+          }
+        })
+        console.log(this.dateUnvalid)
+      }).catch(err=>{
+        this.$message.error('查询失败，请重试')
+      })
+
       this.dateOptions = Object.assign({}, this.dateOptions, {
         disabledDate: time => {
           let day = time.getDay()
@@ -291,6 +351,32 @@ export default {
             day === 0 ||
             day === 6 ||
             self.determineDateValid(time) ||
+            stamp <= Date.now() ||
+            stamp >= Date.now() + 90 * 24 * 3600 * 1000
+          )
+        }
+      })
+    },
+    localUpdateDateInfo(){
+      this.dateUnvalid = []
+      this.dateInfo.forEach(itemInfo=>{
+        if(itemInfo.AM + itemInfo.PM === 0 || 
+          (itemInfo.AM < this.leaderInfo.length && itemInfo.PM < this.leaderInfo.length)){
+          this.dateUnvalid.push(itemInfo.date)
+        }
+      })
+      if (this.dateTime.date && this.determineDateValid(this.dateTime.date)) {
+        this.dateTime.date = ''
+        this.$message.error('该日期打印机数量不足，请重新选择')
+      }
+      this.dateOptions = Object.assign({}, this.dateOptions, {
+        disabledDate: time => {
+          let day = time.getDay()
+          let stamp =  time.getTime()
+          return (
+            day === 0 ||
+            day === 6 ||
+            this.determineDateValid(time) ||
             stamp <= Date.now() ||
             stamp >= Date.now() + 90 * 24 * 3600 * 1000
           )
@@ -317,6 +403,27 @@ export default {
           )
         }
       })
+
+      let info = this.dateInfo.filter(item=>{
+        return item['date'] === val
+      })[0]
+      this.AMRemain = parseInt(info.AM)
+      this.PMRemain = parseInt(info.PM)
+      console.log(info)
+    },
+    dateTranslate(date){
+      let yyyy = date.getFullYear().toString()
+      let m = date.getMonth()+1
+      let d = date.getDate()
+      let MM = m.toString()
+      if(m < 10){
+        MM = '0' + MM
+      }
+      let DD = d.toString()
+      if(d < 10){
+        DD = '0' + DD
+      }
+      return yyyy+'-'+MM+'-'+DD
     }
   }
 }

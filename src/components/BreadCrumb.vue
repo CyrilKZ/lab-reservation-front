@@ -24,7 +24,7 @@ export default {
       if(to.name === 'LogIn' || to.name === 'Register'){
         //do nothing
       }
-      else if(to.name === 'SingleReserve' || to.name === 'ReservationRecord' || to.name === 'ReserveSuccess'){
+      else if(to.name === 'SingleReserve' || to.name === 'ReservationRecord' || to.name === 'ReserveSuccess' || to.name === 'ReservePending'){
         routeList.push({
           path: to.path,
           query: to.query,

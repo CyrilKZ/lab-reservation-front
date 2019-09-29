@@ -5,11 +5,13 @@ import LogIn from '@/components/LogIn'
 import Register from '@/components/Register'
 //import NavBar from '@/components/NavBar'
 import SingleReserve from '@/components/SingleReserve'
-import MultiReserve from '@/components/MultiReserve'
+//import MultiReserve from '@/components/MultiReserve'
 import ReservationRecord from '@/components/ReservationRecord'
 import SingleReserveForm from '@/components/SingleReserveForm'
 import ReserveSuccess from '@/components/ReserveSuccess'
 import SpecialReserveForm from '@/components/SpecialReserveForm'
+import ReservePending from '@/components/ReservePending'
+import AdminSignIn from '@/components/AdminSignIn'
 
 Vue.use(Router)
 
@@ -46,17 +48,6 @@ export default new Router({
         hasInfo: true,
         title: '个人预约',
         authType: 'user'
-      }
-    },
-    {
-      path: '/multi_reserve',
-      name: 'MultiReserve',
-      component: MultiReserve,
-      meta: {
-        hasNavbar: true,
-        hasInfo: true,
-        title: '',
-        authType: 'admin'
       }
     },
     {
@@ -99,6 +90,26 @@ export default new Router({
         hasNavbar: true,
         title: '提示',
         authType: 'user'
+      }
+    },{
+      path: '/pending',
+      name: 'ReservePending',
+      component: ReservePending,
+      meta: {
+        hasInfo: true,
+        hasNavbar: true,
+        title: '提示',
+        authType: 'user'
+      }
+    },{
+      path: '/admin_signin',
+      name: 'AdminSignIn',
+      component: AdminSignIn,
+      meta: {
+        hasInfo: false,
+        hasNavbar: false,
+        title: '签到',
+        authType: 'admin'
       }
     }
   ]

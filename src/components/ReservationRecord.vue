@@ -234,7 +234,7 @@ export default {
       let self = this
       this.$axios.get(
         '/records/queryreserve', 
-        {page: self.rsvCurrentPage}
+        {params: {page: self.rsvCurrentPage}}
       ).then(res=>{
         console.log(res)
         this.rsvTotal = res.data.count
@@ -248,7 +248,7 @@ export default {
       let self = this
       this.$axios.get(
         '/records/queryuse', 
-        {page: self.usgCurrentPage}
+        {params: {page: self.usgCurrentPage}}
       ).then(res=>{
         console.log(res)
         this.usgTotal = res.data.count
@@ -262,7 +262,7 @@ export default {
       let self = this
       this.$axios.get(
         '/records/querybreach', 
-        {page: self.brcCurrentPage}
+        {params: {page: self.brcCurrentPage}}
       ).then(res=>{
         console.log(res)
         this.brcTotal = res.data.count

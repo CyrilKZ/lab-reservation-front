@@ -85,7 +85,12 @@ export default {
                 maxRsv: response.data.max_reserve
               }
               this.$store.commit('login', resdata)
-              this.$router.push('/single_reserve')
+              if(resdata.isAdmin){
+                this.$router.push('/admin_signin')
+              }
+              else{
+                this.$router.push('/single_reserve')
+              }            
               console.log(resdata)
             })
             .catch(err => {
