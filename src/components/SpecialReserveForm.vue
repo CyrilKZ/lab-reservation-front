@@ -238,7 +238,7 @@ export default {
         operators: this.leaderInfo,
         date: datetime[0],
         time: datetime[1],
-        note: '预计使用时长: ' + this.dateTime.duration + '小时 | 预约事由' + this.reason.text
+        note: '预计使用时长: ' + this.dateTime.duration + '小时 | 预约事由: ' + this.reason.text
       }
       console.log(params)
       this.$axios.post('/reserve/specialsubmit', params)
