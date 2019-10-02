@@ -52,13 +52,13 @@
               <template slot-scope="scope">
                 <el-popover placement="right" trigger="click" width="120">
                   <div>{{scope.row.note}}</div>
-                  <el-button slot="reference" size="small" type="primary" :plain="true" :disabled="scope.row.note===''">查看</el-button>
+                  <el-button slot="reference" size="small" type="primary" :plain="true" :disabled="!scope.row.note">查看</el-button>
                 </el-popover>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center">
               <template slot-scope="scope">
-                <el-button size="small" type="primary" :plain="true" @click="SignIn(scope.row.id)">签到</el-button>
+                <el-button size="small" type="primary" :plain="true" @click="signIn(scope.row.id)">签到</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -117,7 +117,12 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /[0-9]+/,
-        inputErrorMessage: '输入格式错误'
+        inputErrorMessage: '输入格式错误',
+        inputValidator: (value)=>{
+          if(parseInt(value) !== parseInt(id)){
+            return '输入不一致'
+          }
+        }
       }).then(({value})=>{
         if(parseInt(value) === parseInt(id)){
           let params = new URLSearchParams()
@@ -130,7 +135,9 @@ export default {
             this.$alert('签到成功，请使用'+machine+'号打印机','提示',{
               confirmButtonText: '确定'
             })
+            this.records = []
           }).catch(err=>{
+            console.log(err)
             this.$message.error('签到失败，请刷新页面并重试')
           })
         }

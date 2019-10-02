@@ -30,9 +30,20 @@ export default {
       this.$router.push('/special_reserve_form')
     },
     goForm(){
-      console.log('goForm')
-      console.log(this.$router)
-      this.$router.push('/single_reserve_form')
+      this.$axios.get(
+        '/records/queryreserve', 
+      ).then(res=>{
+        if(res.data.count > 0){
+          this.$message.error('您还有未完成的预约，请完成预约后再进行另外的预约')
+        }
+        else {
+          this.$router.push('/single_reserve_form')
+        }
+      }).catch(err=>{
+        this.$message.error('可用记录查询失败，请重试')
+        console.log(err)
+      })
+      
     }
   }
 }
@@ -58,7 +69,12 @@ export default {
   }
   .hint-box{
     margin-top: 20px;
-    font-size: 16px;
     height: 180px;
+    font-weight: 400;
+    font-size: 12px;
+    color: gray;
+    margin-bottom: 0;
+    padding: 0;
+    line-height: 22px;
   }
 </style>

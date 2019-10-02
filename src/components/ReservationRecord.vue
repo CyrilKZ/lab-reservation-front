@@ -8,15 +8,16 @@
               <div>{{scope.row.id}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="预约时间"  min-width="280" align="center">
+          <el-table-column label="预约时间"  min-width="260" align="center">
             <template slot-scope="scope">
               <div>{{scope.row.submit_time}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="使用时间" min-width="160" align="center">
+          <el-table-column label="使用时间" min-width="180" align="center">
             <template slot-scope="scope">
-              <div v-if="scope.row.time === 'AM'">{{scope.row.date}},上午</div>
-              <div v-if="scope.row.time === 'PM'">{{scope.row.date}},下午</div>
+              <div v-if="scope.row.time === 'AM'">{{scope.row.date+' '}}上午</div>
+              <div v-if="scope.row.time === 'PM'">{{scope.row.date+' '}}下午</div>
+              <div v-if="scope.row.time === 'OT'">{{scope.row.date+' '}}{{scope.row.special_time}}</div>
             </template>
           </el-table-column>
           <el-table-column label="使用人" align="center">
@@ -34,14 +35,14 @@
           <el-table-column label="状态" min-width="70" align="center">
             <template slot-scope="scope">
               <div v-if="scope.row.checked" style="color:green">已通过</div>
-              <div v-if="!scope.row.checked" style="color:red">未通过</div>
+              <div v-if="!scope.row.checked" style="color:gray">审核中</div>
             </template>
           </el-table-column>
-          <el-table-column label="备注" min-width="70" align="center">
+          <el-table-column label="备注" min-width="80" align="center">
             <template slot-scope="scope">
               <el-popover placement="right" trigger="click" width="120">
                 <div>{{scope.row.note}}</div>
-                <el-button slot="reference" size="small" type="primary" :plain="true" :disabled="scope.row.note===''">查看</el-button>
+                <el-button slot="reference" size="small" type="primary" :plain="true" :disabled="!scope.row.note">查看</el-button>
               </el-popover>
             </template>
           </el-table-column>
@@ -68,12 +69,12 @@
               <div>{{scope.row.id}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="签到时间"  min-width="190" align="center">
+          <el-table-column label="签到时间"  min-width="160" align="center">
             <template slot-scope="scope">
               <div>{{scope.row.start_time}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="签退时间" min-width="190" align="center">
+          <el-table-column label="签退时间" min-width="160" align="center">
             <template slot-scope="scope">
               <div>{{scope.row.end_time}}</div>
             </template>
@@ -90,11 +91,11 @@
               </template>
             </el-table-column>
           </el-table-column>
-          <el-table-column label="备注" min-width="70" align="center">
+          <el-table-column label="备注" min-width="80" align="center">
             <template slot-scope="scope">
               <el-popover placement="right" trigger="click" width="120">
                 <div>{{scope.row.note}}</div>
-                <el-button slot="reference" size="small" type="primary" :plain="true">查看</el-button>
+                <el-button slot="reference" size="small" type="primary" :plain="true" :disabled="!scope.row.note">查看</el-button>
               </el-popover>
             </template>
           </el-table-column>   
@@ -107,14 +108,14 @@
             <el-table-column label="当前状态" min-width="80" align="center">
               <template slot-scope="scope">
                 <div v-if="scope.row.machine.available" style="color: green">可用</div>
-                <div v-if="!scope.row.machine.available" style="color: red">不可用</div>
+                <div v-if="!scope.row.machine.available" style="color: red">占用</div>
               </template>
             </el-table-column>
-            <el-table-column label="备注" min-width="70" align="center">
+            <el-table-column label="备注" min-width="80" align="center">
               <template slot-scope="scope">
                 <el-popover placement="right" trigger="click" width="120">
                   <div>{{scope.row.machine.note}}</div>
-                  <el-button slot="reference" size="small" type="primary" :plain="true" :disabled="scope.row.machine.note===''">查看</el-button>
+                  <el-button slot="reference" size="small" type="primary" :plain="true" :disabled="!scope.row.machine.note">查看</el-button>
                 </el-popover>
               </template>
             </el-table-column>
@@ -137,15 +138,15 @@
               <div>{{scope.row.id}}</div>
             </template>
           </el-table-column>
-          <el-table-column label="预约时间"  min-width="280" align="center">
+          <el-table-column label="预约时间"  min-width="160" align="center">
             <template slot-scope="scope">
               <div>{{scope.row.submit_time}}</div>
             </template>
           </el-table-column>
           <el-table-column label="使用时间" min-width="160" align="center">
             <template slot-scope="scope">
-              <div v-if="scope.row.time === 'AM'">{{scope.row.date}},上午</div>
-              <div v-if="scope.row.time === 'PM'">{{scope.row.date}},下午</div>
+              <div v-if="scope.row.time === 'AM'">{{scope.row.date+' '}}上午</div>
+              <div v-if="scope.row.time === 'PM'">{{scope.row.date+' '}}下午</div>
             </template>
           </el-table-column>
           <el-table-column label="使用人" align="center">
@@ -160,11 +161,11 @@
               </template>
             </el-table-column>
           </el-table-column>
-          <el-table-column label="备注" min-width="70" align="center">
+          <el-table-column label="备注" min-width="80" align="center">
             <template slot-scope="scope">
               <el-popover placement="right" trigger="click" width="120">
                 <div>{{scope.row.note}}</div>
-                <el-button slot="reference" size="small" type="primary" :plain="true" :disabled="scope.row.note===''">查看</el-button>
+                <el-button slot="reference" size="small" type="primary" :plain="true" :disabled="!scope.row.note">查看</el-button>
               </el-popover>
             </template>
           </el-table-column>   
@@ -278,7 +279,14 @@ export default {
         cancelButtonText: '否',
         type: 'warning'
       }).then(()=>{
-        console.log(id)
+        this.$axios.post('/reserve/cancel', {id: id})
+          .then(res=>{
+            this.$message.success('取消成功!')
+            this.queryReserveInfo()
+          })
+          .catch(err=>{
+            this.$message.error('取消失败，请重试')
+          })
       }).catch(()=>{})
     }
   }

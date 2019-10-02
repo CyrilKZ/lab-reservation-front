@@ -84,17 +84,17 @@
       >
         <el-row>
           <el-col :span="13">
-            <el-form-item label="预约日期" prop="time">
+            <el-form-item label="预约时间" prop="time">
               <el-date-picker
                 type="datetime"
                 v-model="dateTime.time"
                 placeholder="选择预约日期"
                 :picker-options="dateOptions"
-                @change="dateChanged"
                 :clearable="false"
                 class="long-picker"
                 size="small"
                 align="left"
+                value-format="yyyy-MM-dd HH:mm:ss"
               ></el-date-picker>
               <div align="left" class="form-tip">注意：只开放90天内的预约</div>
             </el-form-item>
@@ -104,7 +104,7 @@
               <el-input 
                 type="number"
                 v-model="dateTime.duration" 
-                placeholder="请选择预计使用时长"
+                placeholder="请选择使用时长"
                 size="small"
                 :min="0"
                 :max="6"
@@ -183,16 +183,15 @@ export default {
         time:'',
         duration:''
       },
-      dateUnvalid: [],
-      AMDisabled: false,
-      PMDisabled: false,
       dateOptions: {
         disabledDate(time) {
-          return time.getTime() <= Date.now()
+          let stamp = time.getTime()
+          return (
+            stamp <= Date.now() ||
+            stamp >= Date.now() + 90 * 24 * 3600 * 1000
+          )
         }
       },
-      dateErr: '',
-      AMPMErr: ''
     }
   },
   methods: {
@@ -211,8 +210,6 @@ export default {
         time: '',
         duration:''
       }
-      this.AMDisabled = false
-      this.PMDisabled = false
     },
     addLeader() {
       this.leaderInfo.push({
@@ -236,8 +233,22 @@ export default {
       this.$refs['dateTimeForm'].validate(valid => {
         allValid = allValid && valid
       })
-      console.log(allValid)
-      console.log(this.dateTime.duration)
+      let datetime = this.dateTime.time.split(' ')
+      let params = {
+        operators: this.leaderInfo,
+        date: datetime[0],
+        time: datetime[1],
+        note: '预计使用时长: ' + this.dateTime.duration + '小时 | 预约事由' + this.reason.text
+      }
+      console.log(params)
+      this.$axios.post('/reserve/specialsubmit', params)
+        .then(res=> {
+          this.$router.push('/pending')
+        })
+        .catch(err=>{
+          console.log(err)
+          this.$message.error('提交失败，请检查表单后重试')
+        })
     },
     determineDateValid(time) {
       for (let i = 0; i < this.dateUnvalid.length; ++i) {
@@ -248,50 +259,6 @@ export default {
       }
       return false
     },
-    updateDateInfo() {
-      this.dateUnvalid = []
-      this.dateTime.date = ''
-      //post here
-      let date = new Date()
-      date.setFullYear(2019)
-      date.setMonth(9)
-      date.setDate(30)
-      date.setHours(0)
-      date.setMinutes(0)
-      date.setSeconds(0)
-      date.setMilliseconds(0)
-      console.log(date)
-      this.dateUnvalid.push(date)
-      const self = this
-      this.dateOptions = Object.assign({}, this.dateOptions, {
-        disabledDate: time => {
-          let stamp = time.getTime()
-          return (
-            self.determineDateValid(time) ||
-            stamp <= Date.now() ||
-            stamp >= Date.now() + 90 * 24 * 3600 * 1000
-          )
-        }
-      })
-    },
-    dateChanged(val) {
-      if (this.determineDateValid(val)) {
-        this.dateTime.date = ''
-        this.$message.error('该日期已经被选取，请重新选择')
-      }
-
-      const self = this
-      this.dateOptions = Object.assign({}, this.dateOptions, {
-        disabledDate: time => {
-          let stamp = time.getTime()
-          return (
-            self.determineDateValid(time) ||
-            stamp <= Date.now() ||
-            stamp >= Date.now() + 90 * 24 * 3600 * 1000
-          )
-        }
-      })
-    }
   }
 }
 </script>
