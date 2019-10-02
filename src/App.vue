@@ -115,7 +115,7 @@ export default {
   align-items: flex-end;
   margin-bottom: 20px;
   min-width: 720px;
-  height: 60px;
+  height: 84px;
 }
 .topbar-tittle {
   font-weight: 600;
