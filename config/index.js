@@ -15,7 +15,7 @@ module.exports = {
         target: 'http://www.lbjthu.tech:8080',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': ''
+          '^/api': '/api'
         }
       }
     },

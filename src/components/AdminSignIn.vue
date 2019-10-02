@@ -32,8 +32,9 @@
             </el-table-column>
             <el-table-column label="使用时间" min-width="160" align="center">
               <template slot-scope="scope">
-                <div v-if="scope.row.time === 'AM'">{{scope.row.date}},上午</div>
-                <div v-if="scope.row.time === 'PM'">{{scope.row.date}},下午</div>
+                <div v-if="scope.row.time === 'AM'">上午</div>
+                <div v-if="scope.row.time === 'PM'">下午</div>
+                <div v-if="scope.row.time === 'OT'">其他</div>
               </template>
             </el-table-column>
             <el-table-column label="使用人" align="center">
@@ -58,7 +59,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
               <template slot-scope="scope">
-                <el-button size="small" type="primary" :plain="true" @click="signIn(scope.row.id)">签到</el-button>
+                <el-button size="small" type="primary" :plain="true" @click="signIn(scope.row.id, scope.row.operator.id)">签到</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -105,6 +106,9 @@ export default {
             {params: {id: self.search.id}}
           ).then(res=>{
             self.records = res.data
+            if(self.records.length === 0){
+              this.$message.error('该学号当前没有预约！')
+            }
           }).catch(err=>{
             self.records = []
             this.$message.error('查询失败，请重试')
@@ -112,19 +116,19 @@ export default {
         }
       })
     },
-    signIn(id){
-      this.$prompt('请输入签到记录的ID以完成签到确认','提示',{
+    signIn(id, op){
+      this.$prompt('请输入签到记录的用户ID以完成签到确认','提示',{
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /[0-9]+/,
         inputErrorMessage: '输入格式错误',
         inputValidator: (value)=>{
-          if(parseInt(value) !== parseInt(id)){
+          if(value !== op){
             return '输入不一致'
           }
         }
       }).then(({value})=>{
-        if(parseInt(value) === parseInt(id)){
+        if(value === op){
           let params = new URLSearchParams()
           params.append('id', id)
           this.$axios.post(

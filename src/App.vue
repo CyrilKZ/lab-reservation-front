@@ -115,12 +115,14 @@ export default {
   align-items: flex-end;
   margin-bottom: 20px;
   min-width: 720px;
+  height: 60px;
 }
 .topbar-tittle {
   font-weight: 600;
   font-size: 30px;
   text-align: left;
   margin-left: 20px;
+  line-height: 60px;
 }
 .navbar-item {
   font-size: 18px;

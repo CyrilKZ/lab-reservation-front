@@ -99,26 +99,10 @@
               </el-popover>
             </template>
           </el-table-column>   
-          <el-table-column label="打印机" align="center">
-            <el-table-column label="编号" min-width="60" align="center">
-              <template slot-scope="scope">
-                 <div>{{scope.row.machine.id}}</div>
-              </template>
-            </el-table-column>
-            <el-table-column label="当前状态" min-width="80" align="center">
-              <template slot-scope="scope">
-                <div v-if="scope.row.machine.available" style="color: green">可用</div>
-                <div v-if="!scope.row.machine.available" style="color: red">占用</div>
-              </template>
-            </el-table-column>
-            <el-table-column label="备注" min-width="80" align="center">
-              <template slot-scope="scope">
-                <el-popover placement="right" trigger="click" width="120">
-                  <div>{{scope.row.machine.note}}</div>
-                  <el-button slot="reference" size="small" type="primary" :plain="true" :disabled="!scope.row.machine.note">查看</el-button>
-                </el-popover>
-              </template>
-            </el-table-column>
+          <el-table-column label="打印机" align="center" min-width="60">
+            <template slot-scope="scope">
+              <div>编号:{{scope.row.machine.id}}</div>
+            </template>
           </el-table-column>    
         </el-table>
         <el-pagination 
