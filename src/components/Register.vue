@@ -34,10 +34,10 @@
             <div align="right" class="register-title">密码：</div>
           </el-col>
           <el-col :span="19">
-            <el-form-item prop="password" :error="registerErrPswd">
+            <el-form-item prop="Passwort" :error="registerErrPswd">
               <el-input
                 type="password"
-                v-model="registerInfo.password"
+                v-model="registerInfo.Passwort"
                 placeholder="请输入密码"
                 auto-complete="off"
                 prefix-icon="el-icon-lock"
@@ -52,10 +52,10 @@
             <div align="right" class="register-title">确认密码：</div>
           </el-col>
           <el-col :span="19">
-            <el-form-item prop="password2" :error="registerErrPswd2">
+            <el-form-item prop="Passwort2" :error="registerErrPswd2">
             <el-input
               type="password"
-              v-model="registerInfo.password2"
+              v-model="registerInfo.Passwort2"
               placeholder="请再次输入密码"
               auto-complete="off"
               prefix-icon="el-icon-lock"
@@ -129,7 +129,7 @@ export default {
       if (!value) {
         callback(new Error('请确认密码'))
       } else {
-        if (value !== this.registerInfo.password) {
+        if (value !== this.registerInfo.Passwort) {
           callback(new Error('密码不一致'))
         }
         callback()
@@ -160,8 +160,8 @@ export default {
     return {
       registerInfo: {
         username: '',
-        password: '',
-        password2: '',
+        Passwort: '',
+        Passwort2: '',
         email: '',
         phone: ''
       },
@@ -176,12 +176,12 @@ export default {
           { max: 30, message: '用户名长度不超过30字符', trigger: 'blur' },
           { min: 5, message: '用户名长度不能短于5字符', trigger: 'blur' }
         ],
-        password: [
+        Passwort: [
           { validator: pswd_validator, trigger: 'blur' },
           { max: 50, message: '密码长度不超过50字符', trigger: 'blur' },
           { min: 6, message: '密码长度不能短于6字符', trigger: 'blur' }
         ],
-        password2: [{ validator: pswd2_validator, trigger: 'blur' }],
+        Passwort2: [{ validator: pswd2_validator, trigger: 'blur' }],
         email: [
           { validator: email_validator, trigger: 'blur' },
           { max: 50, message: '邮箱长度不超过50字符', trigger: 'blur' }
@@ -203,7 +203,7 @@ export default {
           this.registerErrPhn = ''
           let params = new URLSearchParams()
           params.append('username', this.registerInfo.username)
-          params.append('password', this.registerInfo.password)
+          params.append('password', this.registerInfo.Passwort)
           params.append('email', this.registerInfo.email)
           params.append('phone', this.registerInfo.phone)
           this.$axios

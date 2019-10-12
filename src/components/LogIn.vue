@@ -21,11 +21,11 @@
             prefix-icon="el-icon-user-solid"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="password" :error="loginErrPswd">
+        <el-form-item prop="Passwort" :error="loginErrPswd">
           <div align="left" class="login-main">密码</div>
           <el-input
             type="password"
-            v-model="loginInfo.password"
+            v-model="loginInfo.Passwort"
             placeholder="请输入密码"
             auto-complete="off"
             prefix-icon="el-icon-lock"
@@ -51,14 +51,14 @@ export default {
     return {
       loginInfo: {
         username: '',
-        password: ''
+        Passwort: ''
       },
       rules: {
         username: [
           { required: true, message: '请输入账号', trigger: 'blur' },
           { max: 30, message: '长度不超过30字符', trigger: 'blur' }
         ],
-        password: [
+        Passwort: [
           { required: true, message: '请输入密码', trigger: 'blur' },
           { max: 50, message: '长度不超过50字符', trigger: 'blur' }
         ]
@@ -74,7 +74,7 @@ export default {
           this.loginErr = ''
           let params = new URLSearchParams()
           params.append('username', this.loginInfo.username)
-          params.append('password', this.loginInfo.password)
+          params.append('password', this.loginInfo.Passwort)
           console.log(params)
           this.$axios
             .post('/accounts/login', params)
