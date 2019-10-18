@@ -16,17 +16,17 @@
           <el-input
             type="text"
             v-model="loginInfo.username"
-            placeholder="请输入账号"
+            placeholder="请输入账�?"
             auto-complete="off"
             prefix-icon="el-icon-user-solid"
           ></el-input>
         </el-form-item>
-        <el-form-item prop="Passwort" :error="loginErrPswd">
+        <el-form-item prop="enigma" :error="loginErrPswd">
           <div align="left" class="login-main">密码</div>
           <el-input
             type="password"
-            v-model="loginInfo.Passwort"
-            placeholder="请输入密码"
+            v-model="loginInfo.enigma"
+            placeholder="请输入密�?"
             auto-complete="off"
             prefix-icon="el-icon-lock"
           ></el-input>
@@ -51,16 +51,16 @@ export default {
     return {
       loginInfo: {
         username: '',
-        Passwort: ''
+        enigma: ''
       },
       rules: {
         username: [
-          { required: true, message: '请输入账号', trigger: 'blur' },
-          { max: 30, message: '长度不超过30字符', trigger: 'blur' }
+          { required: true, message: '请输入账�?', trigger: 'blur' },
+          { max: 30, message: '长度不超�?30字符', trigger: 'blur' }
         ],
-        Passwort: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { max: 50, message: '长度不超过50字符', trigger: 'blur' }
+        enigma: [
+          { required: true, message: '请输入密�?', trigger: 'blur' },
+          { max: 50, message: '长度不超�?50字符', trigger: 'blur' }
         ]
       },
       loginErrUsrnm: '',
@@ -74,7 +74,7 @@ export default {
           this.loginErr = ''
           let params = new URLSearchParams()
           params.append('username', this.loginInfo.username)
-          params.append('password', this.loginInfo.Passwort)
+          params.append('password', this.loginInfo.enigma)
           console.log(params)
           this.$axios
             .post('/accounts/login', params)
