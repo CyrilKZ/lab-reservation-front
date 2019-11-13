@@ -218,13 +218,12 @@ export default {
             })
             .catch(err => {
               this.$message.error('注册失败，请检查表单')
-              if (err.data.result === 1) {
+              if (err.data == 'Username already exists') {
                 console.log('reg fail1')
-                this.registerErrEml = '注册失败，请使用清华邮箱'
+                this.registerErrUsrnm = '用户名已被注册'
               }
-              else if (err.data.result === 2) {
-                console.log('reg fail2')
-                this.registerErrUsrnm = '注册失败，用户名已被占用'
+              else if ('email' in err.data){
+                this.registerErrEml = '请使用格式正确的清华大学邮箱'
               }
             })
         }
