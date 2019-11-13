@@ -20,43 +20,43 @@
               <el-input
                 type="text"
                 v-model="registerInfo.username"
-                placeholder="请输入账�?"
+                placeholder="请输入账号"
                 auto-complete="off"
                 prefix-icon="el-icon-user-solid"
               ></el-input>
-              <div align="left" class="register-tip">5�?30个字符，不能包括特殊字符</div>
+              <div align="left" class="register-tip">5-30个字符，不能包括特殊字符</div>
             </el-form-item>
           </el-col>
         </el-row>          
                
         <el-row>
           <el-col :span="5">
-            <div align="right" class="register-title">密码�?</div>
+            <div align="right" class="register-title">密码：</div>
           </el-col>
           <el-col :span="19">
             <el-form-item prop="enigma" :error="registerErrPswd">
               <el-input
                 type="password"
                 v-model="registerInfo.enigma"
-                placeholder="请输入密�?"
+                placeholder="请输入密码"
                 auto-complete="off"
                 prefix-icon="el-icon-lock"
               ></el-input>
-              <div align="left" class="register-tip">6�?50个字符，不能包括特殊字符</div>
+              <div align="left" class="register-tip">6-50个字符，不能包括特殊字符</div>
             </el-form-item>
           </el-col>
         </el-row>
                    
         <el-row>
           <el-col :span="5">
-            <div align="right" class="register-title">确认密码�?</div>
+            <div align="right" class="register-title">确认密码：</div>
           </el-col>
           <el-col :span="19">
             <el-form-item prop="enigma2" :error="registerErrPswd2">
             <el-input
               type="password"
               v-model="registerInfo.enigma2"
-              placeholder="请再次输入密�?"
+              placeholder="请再次输入密码"
               auto-complete="off"
               prefix-icon="el-icon-lock"
             ></el-input>
@@ -67,14 +67,14 @@
       
         <el-row>
           <el-col :span="5">
-            <div align="right" class="register-title">邮箱�?</div>
+            <div align="right" class="register-title">邮箱：</div>
           </el-col>
           <el-col :span="19">
             <el-form-item prop="email" :error="registerErrEml">
               <el-input
                 type="text"
                 v-model="registerInfo.email"
-                placeholder="请输入清华大学邮�?"
+                placeholder="请输入清华大学邮箱"
                 auto-complete="off"
                 prefix-icon="el-icon-message"
               ></el-input>
@@ -85,14 +85,14 @@
 
         <el-row>
           <el-col :span="5">
-            <div align="right" class="register-title">联系电话�?</div>
+            <div align="right" class="register-title">联系电话：</div>
           </el-col>
           <el-col :span="19">
             <el-form-item prop="phone" :error="registerErrPhn">
               <el-input
                 type="text"
                 v-model="registerInfo.phone"
-                placeholder="请输入可以用于通知预约变更的联系电�?"
+                placeholder="请输入可以用于通知预约变更的联系电话："
                 auto-complete="off"
                 prefix-icon="el-icon-phone-outline"
               ></el-input>
@@ -120,24 +120,24 @@ export default {
   data() {
     let pswd_validator = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入密�?'))
+        callback(new Error('请输入密码'))
       } else {
         callback()
       }
     }
     let pswd2_validator = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请确认密�?'))
+        callback(new Error('请确认密码'))
       } else {
         if (value !== this.registerInfo.enigma) {
-          callback(new Error('密码不一�?'))
+          callback(new Error('密码不一致'))
         }
         callback()
       }
     }
     let email_validator = (rule, value, callback) => {
       if (!value) {
-        callback(new Error('请输入邮�?'))
+        callback(new Error('请输入邮箱'))
       } else {
         let expression = /^([a-zA-Z0-9]+[-_\.]?)+@([a-zA-Z0-9]+\.)+[a-z]+$/
         if (!expression.test(value)) {
@@ -148,7 +148,7 @@ export default {
     }
     let phone_validator = (rule, value, callback) => {
       if(!value) {
-        callback(new Error('请输入你的联系电�?'))
+        callback(new Error('请输入你的联系电话'))
       } else {
         let expression = /^[0-9]{11}$/
         if(!expression.test(value)) {
@@ -174,17 +174,17 @@ export default {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { max: 30, message: '用户名长度不超过30字符', trigger: 'blur' },
-          { min: 5, message: '用户名长度不能短�?5字符', trigger: 'blur' }
+          { min: 5, message: '用户名长度不能短于5字符', trigger: 'blur' }
         ],
         enigma: [
           { validator: pswd_validator, trigger: 'blur' },
-          { max: 50, message: '密码长度不超�?50字符', trigger: 'blur' },
+          { max: 50, message: '密码长度不超过50字符', trigger: 'blur' },
           { min: 6, message: '密码长度不能短于6字符', trigger: 'blur' }
         ],
         enigma2: [{ validator: pswd2_validator, trigger: 'blur' }],
         email: [
           { validator: email_validator, trigger: 'blur' },
-          { max: 50, message: '邮箱长度不超�?50字符', trigger: 'blur' }
+          { max: 50, message: '邮箱长度不超于50字符', trigger: 'blur' }
         ],
         phone :[
           { validator: phone_validator, trigger: 'blur'},
@@ -209,7 +209,7 @@ export default {
           this.$axios
             .post('/accounts/register', params)
             .then(response => {
-              this.$alert('注册成功，请验证邮箱后登�?','成功',{
+              this.$alert('注册成功，请验证邮箱后登录','成功',{
                 confirmButtonText: '确定',
                 callback: action=>{
                   this.$router.push('/')
@@ -217,7 +217,7 @@ export default {
               })            
             })
             .catch(err => {
-              this.$message.error('注册失败，请检查表�?')
+              this.$message.error('注册失败，请检查表单')
               if (err.data.result === 1) {
                 console.log('reg fail1')
                 this.registerErrEml = '注册失败，请使用清华邮箱'

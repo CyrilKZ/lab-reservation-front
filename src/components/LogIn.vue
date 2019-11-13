@@ -16,7 +16,7 @@
           <el-input
             type="text"
             v-model="loginInfo.username"
-            placeholder="请输入账�?"
+            placeholder="请输入账号"
             auto-complete="off"
             prefix-icon="el-icon-user-solid"
           ></el-input>
@@ -26,7 +26,7 @@
           <el-input
             type="password"
             v-model="loginInfo.enigma"
-            placeholder="请输入密�?"
+            placeholder="请输入密码"
             auto-complete="off"
             prefix-icon="el-icon-lock"
           ></el-input>
@@ -55,12 +55,12 @@ export default {
       },
       rules: {
         username: [
-          { required: true, message: '请输入账�?', trigger: 'blur' },
-          { max: 30, message: '长度不超�?30字符', trigger: 'blur' }
+          { required: true, message: '请输入账号', trigger: 'blur' },
+          { max: 30, message: '长度不超过30字符', trigger: 'blur' }
         ],
         enigma: [
-          { required: true, message: '请输入密�?', trigger: 'blur' },
-          { max: 50, message: '长度不超�?50字符', trigger: 'blur' }
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { max: 50, message: '长度不超过50字符', trigger: 'blur' }
         ]
       },
       loginErrUsrnm: '',
