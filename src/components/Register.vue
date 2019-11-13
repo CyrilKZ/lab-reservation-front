@@ -218,6 +218,7 @@ export default {
             })
             .catch(err => {
               this.$message.error('注册失败，请检查表单')
+              console.log(err)
               if (err.data == 'Username already exists') {
                 console.log('reg fail1')
                 this.registerErrUsrnm = '用户名已被注册'
